@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         tools:context=".FirstFragment">
 
-        <!-- TODO: CHANGE 'android:text' THEN BUILD/DEPLOY -->
+        <!-- TODO: CHANGE 'android:text' THEN BUILD/DEPLOY. OR EVEN DELETE THE ENTIRE TEXTVIEW. -->
         <TextView
             android:id="@+id/textview_first"
             android:layout_width="wrap_content"
