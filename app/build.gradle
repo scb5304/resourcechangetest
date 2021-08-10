@@ -1,0 +1,98 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.example.resourcechangetest"
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        dataBinding true
+    }
+    sourceSets {
+        internalDevelopment {
+            java.srcDir('src/internal/java')
+            java.srcDir('src/nonproduction/java')
+
+            //res.srcDirs = ['src/main/res'] < -- also experiences the issue
+            res.srcDirs = ['src/main/res', 'src/nonproduction/res'] // TODO: Remove me to fix the issue
+        }
+        internalStaging {
+            java.srcDir('src/internal/java')
+            java.srcDir('src/nonproduction/java')
+            res.srcDirs = ['src/main/res', 'src/nonproduction/res']
+        }
+        internalProduction {
+            java.srcDir('src/internal/java')
+            java.srcDir('src/production/java')
+            res.srcDirs = ['src/main/res', 'src/production/res']
+        }
+        externalProduction {
+            java.srcDir('src/external/java')
+            java.srcDir('src/production/java')
+            res.srcDirs = ['src/main/res', 'src/production/res']
+        }
+    }
+    buildTypes {
+        internalDevelopment {
+            debuggable true
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ["debug"]
+        }
+        internalStaging {
+            debuggable true
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ["debug"]
+        }
+        internalProduction {
+            debuggable false
+            matchingFallbacks = ["release"]
+        }
+        externalProduction {
+            debuggable false
+            matchingFallbacks = ["release"]
+        }
+    }
+}
+
+configurations {
+    internalImplementation
+    internalDevelopmentImplementation.extendsFrom(internalImplementation)
+    internalStagingImplementation.extendsFrom(internalImplementation)
+    internalProductionImplementation.extendsFrom(internalImplementation)
+
+    nonProductionImplementation
+    internalDevelopmentImplementation.extendsFrom(nonProductionImplementation)
+    internalStagingImplementation.extendsFrom(nonProductionImplementation)
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.navigation:navigation-fragment:2.3.5'
+    implementation 'androidx.navigation:navigation-ui:2.3.5'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}
